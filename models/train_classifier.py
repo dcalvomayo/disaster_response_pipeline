@@ -51,8 +51,8 @@ def load_data(database_filepath):
 def tokenize(text):
     """
 
-    Function that processes a string using tokenization and lemmatization
-    techniques from nltk libraries.
+    Function that processes a string using case normalization, lemmatization
+    and tokenization techniques from nltk libraries.
 
     Input:
     - text: string containing text to be processed.
@@ -79,7 +79,7 @@ def build_model():
     library with the following algorithm:
 
     1. Convert tokenized messages into vectors.
-    2. Apply TFID transformation to improve accuracy?
+    2. Apply TF-IDF transformation.
     3. Classify data using Random Forest technique.
 
     Output:
@@ -93,7 +93,18 @@ def build_model():
                 ('clf', MultiOutputClassifier(RandomForestClassifier()))
                 ])
 
-    return pipeline
+    parameters = {
+            'vect__max_df': (0.5,0.75,1.0),
+            'vect__ngram_range': ((1,1), (1,2)),
+            'vect__max_features': (None, 5000, 10000),
+            'tfidf__use_idf': (True, False),
+            'clf__n_estimators': [50, 100, 200],
+            'clf__min_samples_split': [2, 3, 4],
+            }
+
+    cv = GridSearchCV(pipeline, param_grid=parameters)
+
+    return cv
 
 
 def evaluate_model(model, X_test, Y_test, category_names):

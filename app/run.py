@@ -2,6 +2,7 @@ import json
 import plotly
 import pandas as pd
 import numpy as np
+import sys, os
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
@@ -13,26 +14,29 @@ from plotly.graph_objs import Bar
 import joblib
 from sqlalchemy import create_engine
 
+sys.path.append('../models/')
+
+from train_classifier import tokenize
 
 app = Flask(__name__)
 
-def tokenize(text):
-    tokens = word_tokenize(text)
-    lemmatizer = WordNetLemmatizer()
+# Function commented out because it is directly imported from ../models/ 
+# for consistency
 
-    clean_tokens = []
-    for tok in tokens:
-        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-        clean_tokens.append(clean_tok)
-
-    return clean_tokens
+#def tokenize(text):
+#    tokens = word_tokenize(text)
+#    lemmatizer = WordNetLemmatizer()
+#
+#    clean_tokens = []
+#    for tok in tokens:
+#        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
+#        clean_tokens.append(clean_tok)
+#
+#    return clean_tokens
 
 # load data
 engine = create_engine('sqlite:///../data/DisasterResponse.db')
 df = pd.read_sql_table('DisasterData', engine)
-
-pd.set_option('display.max_columns', None)
-#print(df.head())
 
 # load model
 model = joblib.load("../models/classifier.pkl")
@@ -47,23 +51,21 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
-    genre_counts = list(genre_counts)
+    #genre_counts = list(genre_counts)
 
+    # Obtain categories names and counts, with the exception of "related" since
+    # it has 3 possible values: 0, 1, and 2, and it is unclear what this values     # represent.
     cat_names = df.columns[5:]
     cat_counts = df[df.columns[5:]].sum()
 
+    # Obtain messages lengths
     lengths = np.zeros(len(df.index))
     for i, ind in enumerate(df.index):
         lengths[i] = int(len(df['message'][ind]))
 
-    #print(lengths)
-
+    # Compute histogram with bins spaced logarithmically
     bins = np.logspace(1,4,num=50)
-
     len_freqs, len_bins = np.histogram(lengths, bins=bins)
-
-    print(bins)
-    print(np.diff(bins))
 
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
@@ -85,7 +87,9 @@ def index():
                     'title': "Genre"
                 }
             }    
-        },        
+        },
+
+        # Bar chart for number of messages on each category 
         {
             'data': [
                 Bar(
@@ -95,12 +99,14 @@ def index():
             ],
 
             'layout': {
-                'title': 'Distribution of Categories',
+                'title': 'Number of messages on each category',
                 'yaxis': {
                     'title': "Count"
                 }
             }
         },
+
+        # Histogram of message length
         {
             'data': [
                 Bar(
@@ -111,7 +117,7 @@ def index():
             ],
 
             'layout': {
-                'title': 'Distribution of Messages length',
+                'title': 'Distribution of Message Length',
                 'align': 'edge',
                 'xaxis': {
                     'type': 'log',

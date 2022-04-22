@@ -31,9 +31,11 @@ ETL and ML pipelines are built in two separate files, and a random forest model 
   - **disaster__categories.csv**: CSV file with category binary data for each message.
   - **disaster__messages.csv**: CSV file with messages translated to English, and in their original language.
   - **process__data.py**: Python file with ETL pipeline.
+  - **DisasterResponse.db**: File to which the Database is loaded (created after following step 1 from Instructions).
 
 - **models**: Folder.
   - **train__classifier.py**: Python file with ML pipeline.
+  - **classifier.pkl**: Saved model (created after following step 1 from Instructions).
 
 ### How to interact?
 For any questions you can contact me on dcalvomayo@gmail.com

@@ -52,6 +52,11 @@ def clean_data(df):
         # convert column from string to numeric
         categories[column] = categories[column].astype(int)
 
+        # drop rows that have any value different from 0 or 1
+        categories = categories.drop(categories[
+                (categories[column]!=0) & (categories[column]!=1)
+                ].index)
+
     # drop the original categories column from `df`
     df.drop('categories', axis=1, inplace=True)
 

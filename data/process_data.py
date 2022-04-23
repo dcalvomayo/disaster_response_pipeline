@@ -56,6 +56,8 @@ def clean_data(df):
         categories[column] = categories[column].astype(str).replace(
                 to_replace=r'[2-9]',value=1, regex=True)
 
+        categories[column] = categories[column].astype(int)
+
     # drop the original categories column from `df`
     df.drop('categories', axis=1, inplace=True)
 

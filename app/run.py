@@ -53,10 +53,9 @@ def index():
     genre_names = list(genre_counts.index)
     #genre_counts = list(genre_counts)
 
-    # Obtain categories names and counts, with the exception of "related" since
-    # it has 3 possible values: 0, 1, and 2, and it is unclear what this values     # represent.
-    cat_names = df.columns[5:]
-    cat_counts = df[df.columns[5:]].sum()
+    # Obtain categories names and counts
+    cat_names = df.columns[4:]
+    cat_counts = df[df.columns[4:]].sum()
 
     # Obtain messages lengths
     lengths = np.zeros(len(df.index))

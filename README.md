@@ -43,6 +43,8 @@ ETL and ML pipelines are built in two separate files, and a random forest model 
 ### How to interact?
 For any questions you can contact me on dcalvomayo@gmail.com
 
+Find this, and other cool projects on my [Github](https://github.com/dcalvomayo)
+
 ### Licensing
 You may take any code, but don't forget to cite the source. Take into account that some code was developed by [Udacity](www.udacity.com), and data was provided by Figure Eight (now [Appen](appen.com)).
 
